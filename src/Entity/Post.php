@@ -4,7 +4,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity()]
-#[ORM\table(name: "post")]
+#[ORM\Table(name: "post")]
 class Post {
     #[ORM\Id()]
     #[ORM\GeneratedValue(strategy: "AUTO")]
@@ -17,7 +17,7 @@ class Post {
     #[ORM\Column(type: "text", length: 320)]
     private string $content; 
 
-    #[ORM\Column(type: "text")]
+    #[ORM\Column(type: "text", nullable: true)]
     private ?string $image = NULL;
     private  $user;
     
