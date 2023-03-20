@@ -15,16 +15,19 @@ class PostController extends AbstractController
     #[Route('/', name: "home")]
     public function index(ManagerRegistry $doctrine): Response
     {
-        $repository = $doctrine->getRepository(Post::class);
-        $posts = $repository->findAll(); // select * from 'post';
-        return $this->render('post/index.html.twig',[
-          "posts" => $posts
+        
+            $repository = $doctrine->getRepository(Post::class);
+            $posts = $repository->findAll(); // select * from 'post';
+            return $this->render('post/index.html.twig',[
+            "posts" => $posts
         ]);
+        
     }
 
     #[Route('/post/new')]
     public function create(Request $request, ManagerRegistry $doctrine): Response
     {
+    if ($this->getUser()) {
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
@@ -39,6 +42,8 @@ class PostController extends AbstractController
             "form" => $form->createView()
         ]);
     }
+    return $this->redirectToRoute("login");
+}
 
     #[Route('/post/edit/{id<\d+>}', name:"edit-post")]
     public function update(Request $request, Post $post, ManagerRegistry $doctrine): Response
@@ -59,6 +64,7 @@ class PostController extends AbstractController
     #[Route('/post/delete/{id<\d+>}', name:"delete-post")]
     public function delete(Post $post, ManagerRegistry $doctrine): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $em = $doctrine->getManager();
         $em-> remove($post);
         $em->flush();
@@ -70,6 +76,7 @@ class PostController extends AbstractController
     #[Route('/post/copy/{id<\d+>}', name:"copy-post")]
     public function duplicate(Post $post, ManagerRegistry $doctrine): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
         $copyPost = clone $post;
         $em = $doctrine->getManager();
         $em->persist($copyPost);

@@ -8,8 +8,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity("username", message: "Le nom d'utilisateur est déjà pris...")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -32,10 +34,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $confirm = null;
 
     #[ORM\OneToMany(targetEntity: "App\Entity\Post", mappedBy: "user")]
-
     private $posts;
 
-    public function __construct(UserPasswordHasherInterface $passwordHasher) {
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
         $this->passwordHasher = $passwordHasher;
         $this->posts = new ArrayCollection();
     }
@@ -96,9 +98,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setPassword(string $password): self
     {
-        dump($password);
         $this->password = $this->passwordHasher->hashPassword($this, $password);
-        dump($this->password);
         return $this;
     }
 
@@ -113,7 +113,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Get the value of posts
-     */ 
+     */
     public function getPosts()
     {
         return $this->posts;
@@ -123,7 +123,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Set the value of posts
      *
      * @return  self
-     */ 
+     */
     public function setPosts($posts)
     {
         $this->posts = $posts;
@@ -134,15 +134,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Get the value of confirm
      */
-    public function getConfirm(): ?string
+    public function getConfirm()
     {
         return $this->confirm;
     }
 
     /**
      * Set the value of confirm
+     *
+     * @return  self
      */
-    public function setConfirm(?string $confirm): self
+    public function setConfirm($confirm)
     {
         $this->confirm = $confirm;
 
