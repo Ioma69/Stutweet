@@ -29,13 +29,14 @@ class PostController extends AbstractController
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $post->setUser($this->getUser());
             $em = $doctrine->getManager();
             $em->persist($post);
             $em->flush();
             return $this->redirectToRoute("home");
         }
         return $this->render('post/form.html.twig', [
-            "post_form" => $form->createView()
+            "form" => $form->createView()
         ]);
     }
 
@@ -49,7 +50,7 @@ class PostController extends AbstractController
             $em->flush();
             return $this->redirectToRoute('home');
         }
-        return $this->render('post/form.html.twig', [
+        return $this->render('form.html.twig', [
             "post_form" => $form->createView()
         ]);
     }
