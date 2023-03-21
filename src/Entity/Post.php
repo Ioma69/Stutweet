@@ -19,7 +19,7 @@ class Post {
     #[ORM\Column(type: "text", length: 320)]
     private string $content; 
 
-    #[ORM\Column(type: "text", nullable: true)]
+    #[ORM\Column(type: "string", nullable: true)]
     private ?string $image = NULL;
 
     #[ORM\Column(type: "datetime")]
