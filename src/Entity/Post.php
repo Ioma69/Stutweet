@@ -1,6 +1,8 @@
 <?php 
 
 namespace App\Entity;
+
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity()]
@@ -19,6 +21,9 @@ class Post {
 
     #[ORM\Column(type: "text", nullable: true)]
     private ?string $image = NULL;
+
+    #[ORM\Column(type: "datetime")]
+    private \DateTime $publishedAt;
    
     
       #[ORM\ManyToOne(targetEntity: "App\Entity\User", inversedBy: "posts")]
@@ -88,6 +93,26 @@ class Post {
     public function setUser($user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    
+
+    /**
+     * Get the value of publishedAt
+     */
+    public function getPublishedAt(): \DateTime
+    {
+        return $this->publishedAt;
+    }
+
+    /**
+     * Set the value of publishedAt
+     */
+    public function setPublishedAt(\DateTime $publishedAt): self
+    {
+        $this->publishedAt = $publishedAt;
 
         return $this;
     }
